@@ -1,7 +1,7 @@
 from selenium import webdriver
 
 class Application:
-    def __int__(self):
+    def __init__(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
@@ -9,15 +9,21 @@ class Application:
         wd = self.wd
         wd.find_element_by_link_text("Logout").click()
 
-    def return_to_home_page(self, wd):
+    def return_to_home_page(self):
+        wd = self.wd
         wd.find_element_by_link_text("home page").click()
 
     def return_to_group_page(self):
         wd = self.wd
         wd.find_element_by_link_text("group page").click()
 
-    def create_contact(self, wd, contact):
-        self.open_page_create_contact(wd)
+    def open_page_create_contact(self):
+        wd = self.wd
+        wd.find_element_by_link_text("add new").click()
+
+    def create_contact(self, contact):
+        wd = self.wd
+        self.open_page_create_contact()
         # fill contact firm
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -56,7 +62,7 @@ class Application:
         wd.find_element_by_name("notes").send_keys(contact.notes)
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
-        self.return_to_home_page(wd)
+        self.return_to_home_page()
 
     def create_group(self, group):
         wd = self.wd
@@ -75,7 +81,8 @@ class Application:
         wd.find_element_by_name("submit").click()
         self.return_to_group_page()
 
-    def open_page_create_contact(self, wd):
+    def open_page_create_contact(self):
+        wd = self.wd
         wd.find_element_by_link_text("add new").click()
 
     def open_group_page(self):
@@ -85,7 +92,7 @@ class Application:
 
     def login(self, username, password):
         wd = self.wd
-        self.open_home_page(wd)
+        self.open_home_page()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").clear()
