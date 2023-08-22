@@ -5,7 +5,7 @@ class ContactHelper:
 
     def go_to_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home page").click()
+        wd.find_element_by_link_text("home").click()
 
     def open_page_create_contact(self):
         wd = self.app.wd
@@ -13,6 +13,7 @@ class ContactHelper:
 
     def create(self, contact):
         wd = self.app.wd
+        self.go_to_home_page()
         self.open_page_create_contact()
         # fill contact firm
         self.fill_contact_form(contact)
@@ -22,12 +23,13 @@ class ContactHelper:
 
     def mod_first_contact(self, new_contact_data):
         wd = self.app.wd
-        #self.go_to_home_page()
+        self.go_to_home_page()
         # open first contact
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
         # edit contact
         self.fill_contact_form(new_contact_data)
         wd.find_element_by_xpath("//div[@id='content']/form/input[22]").click()
+        self.go_to_home_page()
 
 
     def fill_contact_form(self, contact):
