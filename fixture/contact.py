@@ -5,11 +5,13 @@ class ContactHelper:
 
     def go_to_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (len(wd.find_elements_by_name("add")) > 0 and len(wd.find_elements_by_name("to_group")) > 0):
+            wd.find_element_by_link_text("home").click()
 
     def open_page_create_contact(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("add new").click()
+        if not (wd.current_url.endswith("/edit.php") and len(wd.find_elements_by_name("submit")) > 0):
+            wd.find_element_by_link_text("add new").click()
 
     def create(self, contact):
         wd = self.app.wd
@@ -69,9 +71,6 @@ class ContactHelper:
         wd.switch_to.alert.accept()
         self.go_to_home_page()
 
-    def open_page_create_contact(self):
-        wd = self.app.wd
-        wd.find_element_by_link_text("add new").click()
 
     def count(self):
         self.go_to_home_page()
