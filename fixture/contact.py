@@ -1,3 +1,5 @@
+from model.contact import Contact
+
 
 class ContactHelper:
     def __init__(self, app):
@@ -33,7 +35,6 @@ class ContactHelper:
         wd.find_element_by_xpath("//div[@id='content']/form/input[22]").click()
         self.go_to_home_page()
 
-
     def fill_contact_form(self, contact):
         wd = self.app.wd
         self.change_field_value("firstname", contact.firstname)
@@ -53,7 +54,6 @@ class ContactHelper:
         self.change_field_value("phone2", contact.phone2)
         self.change_field_value("notes", contact.notes)
 
-
     def change_field_value(self, field_name, text):
         wd = self.app.wd
         if text is not None:
@@ -71,8 +71,18 @@ class ContactHelper:
         wd.switch_to.alert.accept()
         self.go_to_home_page()
 
-
     def count(self):
         self.go_to_home_page()
         wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.go_to_home_page()
+        contacts = []
+        for element in wd.find_elements_by_name("entry"):
+            firstname = element.find_element_by_xpath(".//td[3]").text
+            lastname = element.find_element_by_xpath(".//td[2]").text
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(firstname=firstname, lastname=lastname, id=id))
+        return contacts
