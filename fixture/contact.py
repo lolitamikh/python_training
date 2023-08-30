@@ -24,6 +24,7 @@ class ContactHelper:
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.go_to_home_page()
+        self.contact_cache = None
 
     def mod_first_contact(self, new_contact_data):
         wd = self.app.wd
@@ -34,6 +35,7 @@ class ContactHelper:
         self.fill_contact_form(new_contact_data)
         wd.find_element_by_xpath("//div[@id='content']/form/input[22]").click()
         self.go_to_home_page()
+        self.contact_cache = None
 
     def fill_contact_form(self, contact):
         wd = self.app.wd
@@ -71,19 +73,23 @@ class ContactHelper:
         wd.switch_to.alert.accept()
         wd.find_element_by_css_selector("div.msgbox")
         self.go_to_home_page()
+        self.contact_cache = None
 
     def count(self):
         self.go_to_home_page()
         wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
 
+    contact_cache = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.go_to_home_page()
-        contacts = []
-        for element in wd.find_elements_by_name("entry"):
-            firstname = element.find_element_by_xpath(".//td[3]").text
-            lastname = element.find_element_by_xpath(".//td[2]").text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contacts.append(Contact(firstname=firstname, lastname=lastname, id=id))
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.go_to_home_page()
+            self.contact_cache = []
+            for element in wd.find_elements_by_name("entry"):
+                firstname = element.find_element_by_xpath(".//td[3]").text
+                lastname = element.find_element_by_xpath(".//td[2]").text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cache.append(Contact(firstname=firstname, lastname=lastname, id=id))
+        return list(self.contact_cache)
