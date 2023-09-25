@@ -30,6 +30,17 @@ class ContactHelper:
     def mod_first_contact(self, new_contact_data):
         self.mod_contact_by_index(0)
 
+    def mod_contact_by_id(self, new_contact_data):
+        wd = self.app.wd
+        self.go_to_home_page()
+        # css=a[href='url']
+        self.choose_contact_by_id(new_contact_data.id)
+        # edit contact
+        self.fill_contact_form(new_contact_data)
+        wd.find_element_by_xpath("//div[@id='content']/form/input[22]").click()
+        self.go_to_home_page()
+        self.contact_cache = None
+
     def mod_contact_by_index(self, index, new_contact_data):
         wd = self.app.wd
         self.go_to_home_page()
@@ -70,6 +81,17 @@ class ContactHelper:
     def delete_first_contact(self):
         self.delete_contact_by_index(0)
 
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        self.go_to_home_page()
+        self.selected_contact_by_id(id)
+        # submit deletion
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to.alert.accept()
+        wd.find_element_by_css_selector("div.msgbox")
+        self.go_to_home_page()
+        self.contact_cache = None
+
     def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.go_to_home_page()
@@ -84,6 +106,14 @@ class ContactHelper:
     def selected_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def selected_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    def choose_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("a[href='edit.php?id=%s']" % id).click()
 
     def count(self):
         self.go_to_home_page()
