@@ -180,3 +180,18 @@ class ContactHelper:
         phone2 = re.search("P: (.*)", text).group(1)
         return Contact(home=home, work=work, mobile=mobile,
                        phone2=phone2)
+
+    def add_contact_to_group_by_id(self, group_id, contact_id):
+        wd = self.app.wd
+        self.go_to_home_page()
+        self.selected_contact_by_id(contact_id)
+        wd.find_element_by_xpath("//select[@name='to_group']/option[@value='%s']" % group_id).click()
+        wd.find_element_by_name("add").click()
+
+    def delete_contact_from_group(self, group_id, contact_id):
+        wd = self.app.wd
+        self.go_to_home_page()
+        wd.find_element_by_xpath("//select[@name='group']/option[@value='%s']" % group_id).click()
+        self.selected_contact_by_id(contact_id)
+        wd.find_element_by_name("remove").click()
+
